@@ -11,21 +11,52 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #ff6b35;
+            --primary-dark: #ff5520;
+            --dark: #1a1a1a;
+            --dark-light: #2d2d2d;
+            --light: #f9f9f9;
+            --text: #333;
+        }
+
+        [data-theme="dark"] {
+            --dark: #0f0f0f;
+            --dark-light: #1a1a1a;
+            --light: #1a1a1a;
+            --text: #e0e0e0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
+            color: var(--text);
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), #ff8c3a);
+            width: 0%;
+            z-index: 999;
+            transition: width 0.1s ease;
         }
 
         /* Header & Nav */
         header {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%);
             color: white;
             padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            background: rgba(26, 26, 26, 0.95);
         }
 
         nav {
@@ -43,10 +74,16 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .logo span {
-            color: #ff6b35;
+            color: var(--primary);
             font-size: 2rem;
         }
 
@@ -59,55 +96,133 @@
         nav a {
             color: white;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
         }
 
-        nav a:hover {
-            color: #ff6b35;
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            border-color: var(--primary);
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #ff6b35 0%, #ff8c3a 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #ff8c3a 100%);
             color: white;
-            padding: 100px 2rem;
+            padding: 120px 2rem;
             text-align: center;
-            min-height: 500px;
+            min-height: 600px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0,0,0,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: slideUp 1s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            font-weight: 700;
+            letter-spacing: -1px;
         }
 
         .hero p {
             font-size: 1.3rem;
             margin-bottom: 2rem;
             max-width: 600px;
+            opacity: 0.95;
         }
 
         .cta-button {
             background: white;
-            color: #ff6b35;
-            padding: 15px 40px;
+            color: var(--primary);
+            padding: 15px 45px;
             border: none;
             border-radius: 50px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-decoration: none;
             display: inline-block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .cta-button:active {
+            transform: translateY(-2px);
         }
 
         /* Container */
@@ -119,164 +234,367 @@
 
         /* Services */
         .services {
-            padding: 80px 2rem;
-            background: #f9f9f9;
+            padding: 100px 2rem;
+            background: var(--light);
         }
 
         .section-title {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #999;
             margin-bottom: 3rem;
-            color: #1a1a1a;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
         }
 
         .service-card {
             background: white;
-            padding: 2rem;
-            border-radius: 10px;
+            padding: 2.5rem;
+            border-radius: 15px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid transparent;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
         }
 
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+        .service-card:nth-child(5) { animation-delay: 0.5s; }
+        .service-card:nth-child(6) { animation-delay: 0.6s; }
+
         .service-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255,107,53,0.2);
+            border-color: var(--primary);
         }
 
         .service-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
         .service-card h3 {
-            color: #ff6b35;
+            color: var(--primary);
             margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .service-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            padding: 3rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
         }
 
         /* Gallery */
         .gallery {
-            padding: 80px 2rem;
+            padding: 100px 2rem;
         }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+        .gallery-slider {
+            position: relative;
+            background: var(--light);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .gallery-container {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-            height: 250px;
-            background: linear-gradient(135deg, #ff6b35, #ff8c3a);
+            min-width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary), #ff8c3a);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.3s;
+            font-size: 1.3rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .gallery-item:hover {
-            transform: scale(1.05);
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .gallery-item-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .gallery-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gallery-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        .gallery-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .gallery-arrow:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-arrow.prev {
+            left: 20px;
+        }
+
+        .gallery-arrow.next {
+            right: 20px;
         }
 
         /* Testimonials */
         .testimonials {
-            padding: 80px 2rem;
-            background: #f9f9f9;
+            padding: 100px 2rem;
+            background: var(--light);
         }
 
         .testimonials-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
         }
 
         .testimonial-card {
             background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .testimonial-card:nth-child(1) { animation-delay: 0.1s; }
+        .testimonial-card:nth-child(2) { animation-delay: 0.2s; }
+        .testimonial-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255,107,53,0.15);
         }
 
         .stars {
-            color: #ff6b35;
-            font-size: 1.2rem;
+            color: var(--primary);
+            font-size: 1.3rem;
             margin-bottom: 1rem;
+            letter-spacing: 2px;
         }
 
         .testimonial-text {
             font-style: italic;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             color: #666;
+            line-height: 1.8;
         }
 
         .author {
             font-weight: bold;
-            color: #1a1a1a;
+            color: var(--text);
+        }
+
+        .author-city {
+            font-size: 0.85rem;
+            color: #999;
         }
 
         /* Contact */
         .contact {
-            padding: 80px 2rem;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 100px 2rem;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%);
             color: white;
-            text-align: center;
         }
 
         .contact h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
-        .contact-info {
+        .contact-wrapper {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
             margin-bottom: 3rem;
         }
 
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
         .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .contact-item h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
 
-        .contact-item strong {
-            color: #ff6b35;
-        }
-
         .contact-form {
-            max-width: 500px;
-            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
         }
 
         .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
+            margin-bottom: 0.7rem;
+            font-weight: 600;
+            font-size: 0.95rem;
         }
 
         .form-group input,
         .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
             font-family: inherit;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 15px rgba(255,107,53,0.3);
         }
 
         .form-group textarea {
@@ -285,7 +603,7 @@
         }
 
         .submit-btn {
-            background: #ff6b35;
+            background: linear-gradient(135deg, var(--primary), #ff8c3a);
             color: white;
             padding: 15px 40px;
             border: none;
@@ -293,66 +611,154 @@
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
-            width: 100%;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(255,107,53,0.3);
         }
 
         .submit-btn:hover {
-            background: #ff5520;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,107,53,0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .form-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .form-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            display: block;
+        }
+
+        .form-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            display: block;
         }
 
         /* Footer */
         footer {
-            background: #1a1a1a;
+            background: var(--dark);
             color: white;
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem;
+            border-top: 2px solid var(--primary);
         }
 
+        footer p:first-child {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             nav ul {
-                gap: 1rem;
-                font-size: 0.9rem;
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: var(--dark-light);
+                padding: 1rem 0;
+                gap: 0;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav a {
+                padding: 1rem 2rem;
+                display: block;
+            }
+
+            nav a::after {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
             }
 
             .section-title {
-                font-size: 1.8rem;
+                font-size: 2rem;
+            }
+
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item {
+                height: 300px;
+            }
+
+            .gallery-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
+    <div class="scroll-progress"></div>
+
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">
+            <div class="logo" onclick="scrollToTop()">
                 <span>🔥</span>
                 <span>ChimSafé</span>
             </div>
-            <ul>
+            <ul id="nav-menu">
                 <li><a href="#services">Services</a></li>
                 <li><a href="#gallery">Galerie</a></li>
                 <li><a href="#avis">Avis</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
+            <div style="display: flex; gap: 1rem;">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            </div>
         </nav>
     </header>
 
     <!-- Hero -->
     <section class="hero">
-        <h1>Ramonage Professionnel & Sécurisé</h1>
-        <p>Nettoyez vos cheminées avec les experts certifiés de ChimSafé. Plus de 15 ans d'expérience au service de votre confort et sécurité.</p>
-        <a href="#contact" class="cta-button">Demander un Devis Gratuit</a>
+        <div class="hero-content">
+            <h1>Ramonage Professionnel & Sécurisé</h1>
+            <p>Nettoyez vos cheminées avec les experts certifiés de ChimSafé. Plus de 15 ans d'expérience au service de votre confort et sécurité.</p>
+            <a href="#contact" class="cta-button">Demander un Devis Gratuit</a>
+        </div>
     </section>
 
     <!-- Services -->
     <section class="services" id="services">
         <div class="container">
             <h2 class="section-title">Nos Services</h2>
+            <p class="section-subtitle">Découvrez notre gamme complète de solutions pour vos cheminées et conduits</p>
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">🧹</div>
@@ -385,6 +791,24 @@
                     <p>Tous nos travaux respectent les normes en vigueur. Certificats fournis systématiquement.</p>
                 </div>
             </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="2500">0</div>
+                    <div class="stat-label">Clients Satisfaits</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="15">0</div>
+                    <div class="stat-label">Ans d'Expérience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="5000">0</div>
+                    <div class="stat-label">Interventions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5/5</div>
+                    <div class="stat-label">Note Moyenne</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -392,13 +816,31 @@
     <section class="gallery" id="gallery">
         <div class="container">
             <h2 class="section-title">Nos Réalisations</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">Cheminée Ancienne Restaurée</div>
-                <div class="gallery-item">Foyer Moderne - Avant/Après</div>
-                <div class="gallery-item">Inspection Vidéo HD</div>
-                <div class="gallery-item">Poêle Efficacité Énergétique</div>
-                <div class="gallery-item">Débistrage Intensif</div>
-                <div class="gallery-item">Installation Neuve Certifiée</div>
+            <p class="section-subtitle">Consultez nos derniers travaux et transformations</p>
+            <div class="gallery-slider">
+                <div class="gallery-container" id="gallery-container">
+                    <div class="gallery-item">
+                        <div class="gallery-item-content">Cheminée Ancienne Restaurée</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-content">Foyer Moderne - Avant/Après</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-content">Inspection Vidéo HD</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-content">Poêle Efficacité Énergétique</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-content">Débistrage Intensif</div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-content">Installation Neuve Certifiée</div>
+                    </div>
+                </div>
+                <button class="gallery-arrow prev" onclick="prevSlide()">❮</button>
+                <button class="gallery-arrow next" onclick="nextSlide()">❯</button>
+                <div class="gallery-nav" id="gallery-nav"></div>
             </div>
         </div>
     </section>
@@ -407,21 +849,25 @@
     <section class="testimonials" id="avis">
         <div class="container">
             <h2 class="section-title">Ce que nos clients disent</h2>
+            <p class="section-subtitle">Des avis vérifiés de clients satisfaits</p>
             <div class="testimonials-grid">
                 <div class="testimonial-card">
                     <div class="stars">⭐⭐⭐⭐⭐</div>
                     <p class="testimonial-text">"Service impeccable et professionnel. L'équipe était courtoise et rapide. Je recommande vivement!"</p>
-                    <p class="author">— Marie Dupont, Orléans</p>
+                    <p class="author">Marie Dupont</p>
+                    <p class="author-city">Orléans</p>
                 </div>
                 <div class="testimonial-card">
                     <div class="stars">⭐⭐⭐⭐⭐</div>
                     <p class="testimonial-text">"Ramoneur sérieux et efficace. Mon foyer tire mieux depuis le débistrage. Prix honnête!"</p>
-                    <p class="author">— Jean Michel, Meung-sur-Loire</p>
+                    <p class="author">Jean Michel</p>
+                    <p class="author-city">Meung-sur-Loire</p>
                 </div>
                 <div class="testimonial-card">
                     <div class="stars">⭐⭐⭐⭐⭐</div>
                     <p class="testimonial-text">"Équipe très professionnelle. Ils ont trouvé un problème que le ramoneur précédent avait raté. Merci!"</p>
-                    <p class="author">— Sophie Laurent, Fleury-les-Aubrais</p>
+                    <p class="author">Sophie Laurent</p>
+                    <p class="author-city">Fleury-les-Aubrais</p>
                 </div>
             </div>
         </div>
@@ -431,40 +877,58 @@
     <section class="contact" id="contact">
         <div class="container">
             <h2>Nous Contacter</h2>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <strong>📞 Téléphone</strong><br>
-                    02 38 66 55 44
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div>
+                            <h3>Téléphone</h3>
+                            <p>02 38 66 55 44</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div>
+                            <h3>Email</h3>
+                            <p>contact@chimsafe.fr</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🕐</div>
+                        <div>
+                            <h3>Horaires</h3>
+                            <p>Lun-Ven: 8h-18h<br>Sam: 9h-12h</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div>
+                            <h3>Localisation</h3>
+                            <p>Centre Val de Loire<br>Disponible régionalement</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <strong>📧 Email</strong><br>
-                    contact@chimsafe.fr
-                </div>
-                <div class="contact-item">
-                    <strong>🕐 Horaires</strong><br>
-                    Lun-Ven: 8h-18h<br>
-                    Sam: 9h-12h
-                </div>
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Votre Nom</label>
+                        <input type="text" id="name" required placeholder="Jean Dupont">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Votre Email</label>
+                        <input type="email" id="email" required placeholder="jean@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" placeholder="06 XX XX XX XX">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" required placeholder="Décrivez votre besoin..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submit-btn">Envoyer ma Demande</button>
+                    <div class="form-message" id="form-message"></div>
+                </form>
             </div>
-            <form class="contact-form">
-                <div class="form-group">
-                    <label>Votre Nom</label>
-                    <input type="text" required>
-                </div>
-                <div class="form-group">
-                    <label>Votre Email</label>
-                    <input type="email" required>
-                </div>
-                <div class="form-group">
-                    <label>Téléphone</label>
-                    <input type="tel">
-                </div>
-                <div class="form-group">
-                    <label>Message</label>
-                    <textarea required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Envoyer ma Demande</button>
-            </form>
         </div>
     </section>
 
@@ -473,5 +937,160 @@
         <p>&copy; 2025 ChimSafé - Ramoneur Professionnel. Tous droits réservés.</p>
         <p>Certifié & Assuré - Norme NF EN 13384</p>
     </footer>
+
+    <script>
+        // ===== SCROLL PROGRESS BAR =====
+        window.addEventListener('scroll', () => {
+            const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.querySelector('.scroll-progress').style.width = scrollPercentage + '%';
+        });
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        document.getElementById('nav-menu').classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        // ===== MOBILE MENU TOGGLE =====
+        function toggleMenu() {
+            document.getElementById('nav-menu').classList.toggle('active');
+        }
+
+        // ===== DARK MODE TOGGLE =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            document.querySelector('.theme-toggle').textContent = isDark ? '🌙' : '☀️';
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.querySelector('.theme-toggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        // ===== SCROLL TO TOP =====
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== GALLERY SLIDER =====
+        let currentSlide = 0;
+        const galleryItems = document.querySelectorAll('.gallery-item').length;
+
+        function initGalleryNav() {
+            const nav = document.getElementById('gallery-nav');
+            for (let i = 0; i < galleryItems; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => goToSlide(i);
+                nav.appendChild(dot);
+            }
+        }
+
+        function updateGallery() {
+            const container = document.getElementById('gallery-container');
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.gallery-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % galleryItems;
+            updateGallery();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + galleryItems) % galleryItems;
+            updateGallery();
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            updateGallery();
+        }
+
+        // Auto-advance gallery every 6 seconds
+        setInterval(nextSlide, 6000);
+        initGalleryNav();
+
+        // ===== COUNTER ANIMATION =====
+        function animateCounter(element, target) {
+            const duration = 2000;
+            const start = Date.now();
+            
+            function update() {
+                const elapsed = Date.now() - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(progress * target);
+                element.textContent = current;
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        // Intersection Observer for counter animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.getAttribute('data-target'));
+                    if (target) {
+                        animateCounter(entry.target, target);
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-target]').forEach(el => observer.observe(el));
+
+        // ===== CONTACT FORM =====
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submit-btn');
+            const msg = document.getElementById('form-message');
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+
+            // Simple validation
+            if (!name || !email || !message) {
+                msg.textContent = '⚠️ Veuillez remplir tous les champs obligatoires';
+                msg.classList.remove('success');
+                msg.classList.add('error');
+                return;
+            }
+
+            // Simulate sending (no backend)
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            setTimeout(() => {
+                msg.textContent = '✅ Merci! Nous vous recontacterons rapidement.';
+                msg.classList.remove('error');
+                msg.classList.add('success');
+                document.getElementById('contact-form').reset();
+                btn.classList.remove('loading');
+                btn.disabled = false;
+
+                setTimeout(() => {
+                    msg.classList.remove('success');
+                }, 5000);
+            }, 800);
+        });
+    </script>
 </body>
 </html>
